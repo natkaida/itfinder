@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<main class="projects">
+    <section class="hero-section text-center">
+        <div class="container container--narrow">
+            <div class="hero-section__box">
+                <h2>Поиск по <span>проектам</span></h2>
+            </div>
+
+            <div class="hero-section__search">
+                <form id='searchForm' class="form" action="{% url 'projects' %}" method="get">
+                    <div class="form__field">
+                        <label for="formInput#search">Поиск по проектам </label>
+                        <input class="input input--text" id="formInput#search" type="text" name="search_query"
+                            placeholder="Поиск по названию/описанию проекта" value="{{ search_query }}" />
+                    </div>
+
+                    <input class="btn btn--sub btn--lg" type="submit" value="Найти" />
+                </form>
+            </div>
+        </div>
+    </section>
+    <section class="projectsList">
+        <div class="container">
+            <div class="grid grid--three">
+
+                {% for project in projects %}
+                <div class="column">
+                    <div class="card project">
+                        <a href="{% url 'project' project.slug %}" class="project">
+                            <img class="project__thumbnail" src="{{ project.imageURL }}" alt="project thumbnail" />
+                            <div class="card__body">
+                                <h3 class="project__title">{{ project.title }}</h3>
+                                <p><a class="project__author" href="#">Разработчик:
+                                        {{ project.owner.name }}</a>
+                                </p>
+                                <p class="project--rating">
+                                    <span style="font-weight: bold;">положительных отзывов:</span>  {{ project.votes_ratio }}%
+                                </p>
+                                 <p class="project--rating">
+                                    <span style="font-weight: bold;">всего отзывов:</span> {{ project.total_votes }}
+                                </p>                               
+                                <div class="project__tags">
+                                    {% for tag in project.tags.all %}
+                                    <a href="{% url 'tag' tag.slug %}" class="tag tag--pill tag--main">{{tag}}</a>
+
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </section>
+</main>
+
+{% endblock %}

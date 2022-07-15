@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<main class="singleProject my-md">
+    <div class="container">
+        <div class="layout">
+            <div class="column column--1of3">
+                <h3 class="singleProject__subtitle">Платформа и стек</h3>
+                <div class="singleProject__toolStack">
+                {% for tag in project.tags.all %}
+                <a href="{% url 'tag' tag.slug %}" class="tag tag--pill tag--sub tag--lg">{{tag}}</a>
+                {% endfor %}               
+                </div>
+
+                {% if project.source_link %}
+                <a class="singleProject__liveLink" href="{{ project.source_link }}" target="_blank"><i
+                        class="im im-external-link"></i>Исходный код на GitHub
+                </a>
+                {% endif %}
+
+                {% if project.demo_link %}
+                <a class="singleProject__liveLink" href="{{ project.source_link }}" target="_blank"><i
+                        class="im im-external-link"></i>Демо-сайт
+
+                </a>
+                {% endif %}
+
+            </div>
+            <div class="column column--2of3">
+                <img class="singleProject__preview" src="{{ project.image.url }}" alt="скриншот проекта" />
+                <a href="#"
+                    class="singleProject__developer">{{ project.owner.name }}</a>
+                <h2 class="singleProject__title">{{ project.title }}</h2>
+                <h3 class="singleProject__subtitle">Информация о проекте</h3>
+                <div class="singleProject__info">
+                    {{ project.description }}
+                </div>
+                <div class="comments">
+                    <h3 class="singleProject__subtitle">Оценки и отзывы</h3>
+                    <h5 class="project--rating">
+                    процент положительных отзывов: {{project.votes_ratio}}%
+                    </h5>
+                    <h5 class="project--rating">
+                    всего отзывов: {{project.total_votes}}
+                    </h5>
+                    {% if request.user.profile.id in project.reviewers %}
+                    <p>Вы уже писали отзыв об этом проекте</p>
+
+                    {% elif request.user.profile == project.owner %}
+                    <p>Вы не можете оставлять отзывы к собственным проектам</p>
+
+                    {% elif request.user.is_authenticated %}
+                    <form class="form" action="{% url 'project' project.id %}" method="POST">
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div class="form__field">
+                            <label for="formInput#textarea">{{ field.label }}</label>
+                            {{field}}
+                        </div>
+                        {% endfor %}
+                        <input class="btn btn--sub btn--lg" type="submit" value="Добавить отзыв" />
+                    </form>
+                    {% else %}
+                    <a href="{% url 'login' %}?next={{ request.path }}">Войдите, чтобы оставить отзыв</a>
+                    {% endif %}
+
+                    <div class="commentList">
+                        {% for review in project.review_set.all %}
+                        {% if review.body %}
+                        <div class="comment">
+                            <a href="{% url 'user-profile' review.owner.id  %}">
+                                <img class="avatar avatar--md" src="{{ review.owner.profile_image.url }}" alt="user" />
+                            </a>
+
+
+                            <div class="comment__details">
+                                <a href="{% url 'user-profile' review.owner.id  %}"
+                                    class="comment__author">{{ review.owner.name }}</a>
+                                <p class="comment__info">{{ review.body|linebreaksbr }}</p>
+                            </div>
+
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</main>
+
+{% endblock %}

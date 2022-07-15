@@ -1,0 +1,28 @@
+{% load static %}
+
+<header class="header">
+    <div class="container container--narrow">
+        <a href="{% url 'projects' %}"><span class="header__logo">IT<i class="fa fa-search"></i>finder</span></a>
+        <nav class="header__nav">
+            <input type="checkbox" id="responsive-menu" />
+            <label for="responsive-menu" class="toggle-menu">
+                <span>Меню</span>
+                <div class="toggle-menu__lines"></div>
+            </label>
+            <ul class="header__menu">
+                <li class="header__menuItem"><a href="#">Разработчики</a></li>
+                <li class="header__menuItem"><a href="#">Проекты</a></li>
+
+
+
+                {% if request.user.is_authenticated %}
+                <li class="header__menuItem"><a href="#">Сообщения</a></li>
+                <li class="header__menuItem"><a href="#">Мой аккаунт</a></li>
+                <li class="header__menuItem"><a href="#" class="btn btn--sub">Выйти</a></li>
+                {% else %}
+                <li class="header__menuItem"><a href="#" class="btn btn--sub">Войти/зарегистрироваться</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</header>

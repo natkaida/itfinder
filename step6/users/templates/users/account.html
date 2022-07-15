@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<main class="settingsPage profile my-md">
+  <div class="container">
+    <div class="layout">
+      <div class="column column--1of3">
+        <div class="card text-center">
+          <div class="card__body dev">
+            <a class="tag tag--pill tag--main settings__btn" href="{% url 'edit-account' %}"><i class="im im-edit"></i>
+              Изменить данные</a>
+            <img class="avatar avatar--xl dev__avatar" src="{{ profile.image.url }}" />
+            <h2 class="dev__name">{{ profile.name  }}</h2>
+            <p class="dev__title">{{ profile.intro }}</p>
+            <p class="dev__location">Город: {{ profile.city }}</p>
+
+            <ul class="dev__social">
+              {% if profile.github %}
+              <li>
+                <a title="GitHub" href="{{ profile.github }}" target="_blank"><i class="im im-github"></i></a>
+              </li>
+              {% endif %}
+
+
+              {% if profile.twitter %}
+              <li>
+                <a title="Twitter" href="{{ profile.twitter }}" target="_blank"><i class="im im-twitter"></i></a>
+              </li>
+              {% endif %}
+
+              {% if profile.linkedin %}
+              <li>
+                <a title="LinkedIn" href="{{ profile.linkedin }}" target="_blank"><i
+                    class="im im-linkedin"></i></a>
+              </li>
+              {% endif %}
+
+              {% if profile.website %}
+              <li>
+                <a title="Личный сайт" href="{{ profile.website }}" target="_blank"><i
+                    class="im im-globe"></i></a>
+              </li>
+              {% endif %}
+
+            </ul>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="column column--2of3">
+        <div class="devInfo">
+          <h3 class="devInfo__title">Обо мне</h3>
+          <p class="devInfo__about">{{ profile.bio }}</p>
+        </div>
+        <div class="settings">
+          <h3 class="settings__title">Стек и навыки</h3>
+          <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'create-skill' %}"><i
+              class="im im-plus"></i> Добавить навык</a>
+        </div>
+
+        <table class="settings__table">
+          {% for skill in skills %}
+          <tr>
+            <td class="settings__tableInfo">
+              <h4>{{skill.name}}</h4>
+              <p>
+                {{skill.description}}
+              </p>
+            </td>
+            <td class="settings__tableActions">
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'update-skill' skill.slug %}"><i
+                  class="im im-edit"></i> Изменить</a>
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'delete-skill' skill.slug %}"><i
+                  class="im im-x-mark-circle-o"></i>
+                Удалить</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+
+        <div class="settings">
+          <h3 class="settings__title">Проекты</h3>
+          <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'create-project' %}"><i
+              class="im im-plus"></i> Добавить проект</a>
+        </div>
+
+        <table class="settings__table">
+          {% for project in projects %}
+          <tr>
+            <td class="settings__thumbnail">
+              <a href="{% url 'project' project.id %}"><img src="{{ project.image.url }}" alt="скриншот проекта" /></a>
+            </td>
+            <td class="settings__tableInfo">
+              <a href="{% url 'project' project.slug %}">{{project.title}}</a>
+              <p>{{project.description|slice:"150"}}</p>
+            </td>
+            <td class="settings__tableActions">
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'update-project' project.id %}"><i
+                  class="im im-edit"></i> Редактировать</a>
+              <a class="tag tag--pill tag--main settings__btn"
+                href="{% url 'delete-project'  project.id %}?next=/account"><i class="im im-x-mark-circle-o"></i>
+                Удалить</a>
+            </td>
+          </tr>
+          {% endfor %}
+
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<main class="home">
+    <section class="hero-section text-center">
+        <div class="container container--narrow">
+            <div class="hero-section__box">
+                <h2>Найти настоящего <span>профессионала</span></h2>
+            </div>
+
+            <div class="hero-section__search">
+
+                <form id="searchForm" class="form" action="{% url 'profiles' %}" method="get">
+                    <div class="form__field">
+                        <label for="formInput#search">Поиск среди разработчиков </label>
+                        <input class="input input--text" id="formInput#search" type="text" name="search_query"
+                            value="" placeholder="Найти разработчика по имени, проекту, скиллу" />
+                    </div>
+
+                    <input class="btn btn--sub btn--lg" type="submit" value="Найти" />
+                </form>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="devlist">
+        <div class="container">
+            <div class="grid grid--three">
+
+                {% for profile in profiles %}
+                <div class="column card">
+                    <div class="dev">
+                        <a href="{% url 'user-profile' profile.id %}" class="card__body">
+                            <div class="dev__profile">
+                                <img class="avatar avatar--md" src="{{ profile.image.url }}" alt="image" />
+                                <div class="dev__meta">
+                                    <h3>{{ profile.name }}</h3>
+                                    <h5>{{ profile.intro|slice:"60" }}</h5>
+                                </div>
+                            </div>
+                            <p class="dev__info">{{ profile.bio|slice:"150" }}</p>
+                            <div class="dev__skills">
+
+                                {% for skill in profile.skills.all|slice:"3" %}
+                                <a href="{% url 'skill' skill.slug %}" class="tag tag--pill tag--main">{{ skill }}</a>
+                                {% endfor %}
+
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </section>
+</main>
+
+{% endblock content %}
